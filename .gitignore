@@ -1,0 +1,32 @@
+# --- data (gigabytes — NEVER commit) ---
+data/
+raw/
+*.parquet
+*.orc
+*.avro
+
+# --- python / venv / caches ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.python-version
+
+# --- spark / iceberg: downloaded jars, local warehouse, logs ---
+.ivy2/
+spark-warehouse/
+metastore_db/
+derby.log
+*.log
+
+# --- ML artifacts (tracked in MLflow, not git) ---
+mlruns/
+mlflow.db
+*.pkl
+*.joblib
+
+# --- editor / OS ---
+.idea/
+.vscode/
+.DS_Store

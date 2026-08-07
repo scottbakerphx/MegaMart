@@ -34,6 +34,7 @@ customer = spark.table("lake.silver.dim_customer").select("customer_id")
 
 # riows w/ valid customer -> good - rows /wout -> quarantine (left-anti)
 good = orders.join(customer, "customer_id", "left_semi")
+good.writeTo("lake.silver.fact_orders").using("iceberg").createOrReplace()
 quarantine = orders.join(customer, "customer_id", "left_anti").withColumn(
     "reason", F.lit("orphan_customer_id")
 )

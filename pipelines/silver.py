@@ -24,6 +24,20 @@ clean = (
     .withColumn("valid_from", F.current_timestamp())
     .withColumn("valid_to", F.lit(None).cast("timestamp"))
 )
+
+p = spark.table("lake.bronze.products")
+clean_products = (
+    p.withColumn(
+        "rn",
+        F.row_number().over(
+            Window.partitionBy("product_id").orderBy(F.col("_ingest_ts").desc())
+        ),
+    )
+    .filter("rn = 1")
+    .drop("rn")
+)
+clean_products.writeTo("lake.silver.dim_product").using("iceberg").createOrReplace()
+
 # coment these out after run -- the MERGE SQL will lhandle it from now on
 clean.writeTo("lake.silver.dim_customer").using(
     "iceberg"

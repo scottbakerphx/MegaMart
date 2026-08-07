@@ -73,7 +73,7 @@ and monitored for **drift**.
 - ✅ Scale-factor dirty-data generator
 - ✅ Iceberg write→read to object storage — verified
 - ✅ Bronze ingestion
-- ⬜ Silver (clean · SCD2 · DQ) · Gold marts
+- ✅ Silver (clean · SCD2 · DQ) · Gold marts
 - ⬜ ML (churn / forecast / fraud) with MLflow
 - ⬜ Streamlit dashboards
 - ⬜ GCP deployment (GCS · Dataproc · BigQuery)

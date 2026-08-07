@@ -72,7 +72,7 @@ and monitored for **drift**.
 - ✅ Environment & tuned Spark session (16 cores / 48 GB, Iceberg-ready) — verified end-to-end
 - ✅ Scale-factor dirty-data generator
 - ✅ Iceberg write→read to object storage — verified
-- 🔨 Bronze ingestion
+- ✅ Bronze ingestion
 - ⬜ Silver (clean · SCD2 · DQ) · Gold marts
 - ⬜ ML (churn / forecast / fraud) with MLflow
 - ⬜ Streamlit dashboards

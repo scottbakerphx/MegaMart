@@ -9,25 +9,22 @@ SOURCES = {
     "products": None,
     "orders": None,
     "clickstream": "event_ts",
-    "payments": None
+    "payments": None,
 }
 
 spark.sparkContext.setLogLevel("ERROR")
 
 for name, ts_col in SOURCES.items():
-    df = (spark.read.parquet(f"file:///home/sbaker/databricks-lab/data/raw/{name}")
-          .withColumn("_ingest_ts",
-                      F.current_timestamp())
-          .withColumn("_source_file",
-                      F.input_file_name())
-          .withColumn("_ingest_batch",
-                      F.lit("batch-0001"))
-          )
-    writer = (df.writeTo(f"lake.bronze.{name}")
-              .using("iceberg"))
+    df = (
+        spark.read.parquet(f"file:///home/sbaker/databricks-lab/data/raw/{name}")
+        .withColumn("_ingest_ts", F.current_timestamp())
+        .withColumn("_source_file", F.input_file_name())
+        .withColumn("_ingest_batch", F.lit("batch-0001"))
+    )
+    writer = df.writeTo(f"lake.bronze.{name}").using("iceberg")
     if ts_col:
-        #iceberg hidden partitioning: 1 part per calendar day
-        writer  = writer.partitionedBy(F.days(F.col(ts_col)))
+        # iceberg hidden partitioning: 1 part per calendar day
+        writer = writer.partitionedBy(F.days(F.col(ts_col)))
     writer.createOrReplace()
     print(f"bronze.{name}: {spark.table(
         f'lake.bronze.{name}')

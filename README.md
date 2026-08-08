@@ -75,7 +75,7 @@ and monitored for **drift**.
 - ✅ Bronze ingestion
 - ✅ Silver (clean · SCD2 · DQ) · Gold marts
 - ✅ ML (churn / forecast / fraud) with MLflow
-- ⬜ Streamlit dashboards
+- ✅ Streamlit dashboards
 - ⬜ GCP deployment (GCS · Dataproc · BigQuery)
 - ⬜ Daily-batch "job simulator" generator
 

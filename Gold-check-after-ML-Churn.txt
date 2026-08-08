@@ -1,0 +1,92 @@
+python scratch_check_gold.py
+OpenJDK 64-Bit Server VM warning: Max heap size too large for Compressed Oops
+:: loading settings :: url = jar:file:/home/sbaker/MegaMart/.venv/lib/python3.12/site-packages/pyspark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Ivy Default Cache set to: /home/sbaker/.ivy2/cache
+The jars for the packages stored in: /home/sbaker/.ivy2/jars
+org.apache.iceberg#iceberg-spark-runtime-3.5_2.12 added as a dependency
+org.apache.hadoop#hadoop-aws added as a dependency
+com.amazonaws#aws-java-sdk-bundle added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-938a153f-1255-4709-a67a-6d1a93561dd1;1.0
+        confs: [default]
+        found org.apache.iceberg#iceberg-spark-runtime-3.5_2.12;1.6.1 in central
+        found org.apache.hadoop#hadoop-aws;3.3.4 in central
+        found com.amazonaws#aws-java-sdk-bundle;1.12.262 in central
+        found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
+:: resolution report :: resolve 71ms :: artifacts dl 2ms
+        :: modules in use:
+        com.amazonaws#aws-java-sdk-bundle;1.12.262 from central in [default]
+        org.apache.hadoop#hadoop-aws;3.3.4 from central in [default]
+        org.apache.iceberg#iceberg-spark-runtime-3.5_2.12;1.6.1 from central in [default]
+        org.wildfly.openssl#wildfly-openssl;1.0.7.Final from central in [default]
+        ---------------------------------------------------------------------
+        |                  |            modules            ||   artifacts   |
+        |       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+        ---------------------------------------------------------------------
+        |      default     |   4   |   0   |   0   |   0   ||   4   |   0   |
+        ---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-938a153f-1255-4709-a67a-6d1a93561dd1
+        confs: [default]
+        0 artifacts copied, 4 already retrieved (0kB/2ms)
+26/08/07 17:27:52 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+--- 1. VERIFY GOLD TABLES ---
+26/08/07 17:27:54 WARN MetricsConfig: Cannot locate configuration: tried hadoop-metrics2-s3a-file-system.properties,hadoop-metrics2.properties
++---------+---------------------+-----------+
+|namespace|tableName            |isTemporary|
++---------+---------------------+-----------+
+|gold     |daily_sales          |false      |
+|gold     |customer_360         |false      |
+|gold     |customer_churn_scores|false      |
++---------+---------------------+-----------+
+
+--- 2. CHECK DAILY SALES METRICS ---
++----------+--------+--------------------+------+------+
+|event_date|category|revenue             |orders|buyers|
++----------+--------+--------------------+------+------+
+|2025-11-14|Apparel |1.8435404300000004E7|913   |908   |
+|2026-04-15|Toys    |1.786012094E7       |991   |974   |
+|2025-08-21|Grocery |1.71801003E7        |882   |873   |
+|2025-10-04|Home    |1.635841238E7       |954   |943   |
+|2026-04-15|Grocery |1.6172457430000002E7|923   |909   |
+|2025-12-06|NULL    |1.61365285E7        |645   |637   |
+|2025-11-01|Grocery |1.6008522469999997E7|867   |856   |
+|2025-10-16|Home    |1.5949703290000003E7|918   |903   |
+|2026-03-13|Home    |1.5478200689999998E7|902   |889   |
+|2026-05-28|Apparel |1.5393305769999998E7|954   |939   |
++----------+--------+--------------------+------+------+
+
+--- 3. CHECK CUSTOMER 360 & CHURN SCORES ---
++-----------+------------+---------+------------------+----------+
+|customer_id|recency_days|frequency|monetary          |churn_risk|
++-----------+------------+---------+------------------+----------+
+|95385      |88          |7        |2706.1            |0.9999    |
+|160556     |78          |11       |7460.66           |0.9999    |
+|47811      |88          |14       |11265.220000000001|0.9999    |
+|139467     |63          |10       |12250.39          |0.9999    |
+|105208     |107         |8        |8333.8            |0.9999    |
+|17681      |88          |8        |-710.3499999999997|0.9999    |
+|55922      |108         |11       |7881.78           |0.9999    |
+|68812      |72          |10       |8920.17           |0.9999    |
+|53568      |78          |12       |11995.94          |0.9999    |
+|67377      |109         |8        |5986.76           |0.9999    |
++-----------+------------+---------+------------------+----------+
+
+--- 4. ICEBERG TABLE MAINTENANCE (COMPACTION) ---
+Compacting lake.gold.daily_sales...
++--------------------------+----------------------+---------------------+-----------------------+
+|rewritten_data_files_count|added_data_files_count|rewritten_bytes_count|failed_data_files_count|
++--------------------------+----------------------+---------------------+-----------------------+
+|                         0|                     0|                    0|                      0|
++--------------------------+----------------------+---------------------+-----------------------+
+
+Compacting lake.gold.customer_360...
++--------------------------+----------------------+---------------------+-----------------------+
+|rewritten_data_files_count|added_data_files_count|rewritten_bytes_count|failed_data_files_count|
++--------------------------+----------------------+---------------------+-----------------------+
+|                        16|                     1|              2586611|                      0|
++--------------------------+----------------------+---------------------+-----------------------+
+
+(.venv) [sbaker@archlinux MegaMart]$
+
+Pipeline StageTech StackStatusFeature ExtractionPySpark + IcebergVerifiedModel AccelerationXGBoost 2.x on RTX 3060 CUDAVerifiedExperiment RegistryMLflow (SQLite Backend)VerifiedModel ExplainabilitySHAP TreeExplainerVerifiedBatch Prediction WritebackPySpark $\rightarrow$ Apache IcebergVerifiedDrift MonitoringEvidently AI + Prometheus PushgatewayVerifiedStorage OptimizationIceberg Rewrite Data FilesVerified

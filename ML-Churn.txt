@@ -1,0 +1,57 @@
+python -m pipelines.ml_churn
+--- 1. FEATURE ENGINEERING (Reading from Gold) ---
+OpenJDK 64-Bit Server VM warning: Max heap size too large for Compressed Oops
+:: loading settings :: url = jar:file:/home/sbaker/MegaMart/.venv/lib/python3.12/site-packages/pyspark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Ivy Default Cache set to: /home/sbaker/.ivy2/cache
+The jars for the packages stored in: /home/sbaker/.ivy2/jars
+org.apache.iceberg#iceberg-spark-runtime-3.5_2.12 added as a dependency
+org.apache.hadoop#hadoop-aws added as a dependency
+com.amazonaws#aws-java-sdk-bundle added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-a943ac8e-4a7c-4985-b5ac-8968dd2853d6;1.0
+        confs: [default]
+        found org.apache.iceberg#iceberg-spark-runtime-3.5_2.12;1.6.1 in central
+        found org.apache.hadoop#hadoop-aws;3.3.4 in central
+        found com.amazonaws#aws-java-sdk-bundle;1.12.262 in central
+        found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
+:: resolution report :: resolve 73ms :: artifacts dl 2ms
+        :: modules in use:
+        com.amazonaws#aws-java-sdk-bundle;1.12.262 from central in [default]
+        org.apache.hadoop#hadoop-aws;3.3.4 from central in [default]
+        org.apache.iceberg#iceberg-spark-runtime-3.5_2.12;1.6.1 from central in [default]
+        org.wildfly.openssl#wildfly-openssl;1.0.7.Final from central in [default]
+        ---------------------------------------------------------------------
+        |                  |            modules            ||   artifacts   |
+        |       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+        ---------------------------------------------------------------------
+        |      default     |   4   |   0   |   0   |   0   ||   4   |   0   |
+        ---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-a943ac8e-4a7c-4985-b5ac-8968dd2853d6
+        confs: [default]
+        0 artifacts copied, 4 already retrieved (0kB/2ms)
+26/08/07 17:26:40 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+Training data shape: (159988, 3). Churn rate: 20.11%
+--- 2. MODEL TRAINING & MLFLOW TRACKING ---
+Model trained! ROC AUC: 1.0000 | PR AUC: 1.0000
+2026/08/07 17:26:45 INFO mlflow.utils.uv_utils: Detected uv project: found uv.lock and pyproject.toml in /home/sbaker/MegaMart
+2026/08/07 17:26:45 INFO mlflow.utils.uv_utils: Detected uv project: found uv.lock and pyproject.toml in /home/sbaker/MegaMart
+2026/08/07 17:26:45 INFO mlflow.utils.environment: Detected uv project at /home/sbaker/MegaMart. Attempting to export requirements via 'uv export'.
+2026/08/07 17:26:45 INFO mlflow.utils.uv_utils: Exported 3 dependencies via uv
+2026/08/07 17:26:45 INFO mlflow.utils.environment: Successfully exported 3 requirements from uv project. Skipping package capture based inference.
+2026/08/07 17:26:45 WARNING mlflow.utils.requirements_utils: Detected one or more mismatches between the model's dependencies and the current Python environment:
+ - numpy (current: 1.26.4, required: numpy==2.5.1)
+To fix the mismatches, call `mlflow.pyfunc.get_model_dependencies(model_uri)` to fetch the model's environment and install dependencies using the resulting environment file.
+2026/08/07 17:26:45 WARNING mlflow.utils.environment: Failed to resolve installed pip version. ``pip`` will be added to conda.yaml environment spec without a version specifier.
+--- 3. EXPLAINABILITY (SHAP) ---
+Feature Importance (recency_days): 9.3267
+Feature Importance (frequency): 0.0000
+Feature Importance (monetary): 0.0000
+--- 4. BATCH SCORING TO ICEBERG ---
+Scores written to lake.gold.customer_churn_scores
+--- 5. DRIFT MONITORING (EVIDENTLY & PROMETHEUS) ---
+Drift - recency_days: 0.0000
+Drift - frequency: 0.0000
+Drift - monetary: 0.0000
+Successfully pushed drift metrics to Prometheus Pushgateway!
+(.venv) [sbaker@archlinux MegaMart]$

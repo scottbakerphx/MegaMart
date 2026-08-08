@@ -74,7 +74,7 @@ and monitored for **drift**.
 - ✅ Iceberg write→read to object storage — verified
 - ✅ Bronze ingestion
 - ✅ Silver (clean · SCD2 · DQ) · Gold marts
-- ⬜ ML (churn / forecast / fraud) with MLflow
+- ✅ ML (churn / forecast / fraud) with MLflow
 - ⬜ Streamlit dashboards
 - ⬜ GCP deployment (GCS · Dataproc · BigQuery)
 - ⬜ Daily-batch "job simulator" generator
